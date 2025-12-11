@@ -15,6 +15,7 @@ model Api {
   cors        String?  // "yes", "no", "unknown"
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  lastFetched DateTime @default(now())
 
   categories  Category[]
   authMethods Auth[]
