@@ -1,3 +1,20 @@
+node_modules
+# Keep environment variables out of version control
+.env
+.env.test
+
+# Prisma
+/generated/prisma
+*.sqlite
+*.sqlite-journal
+
+# Build
+dist
+build
+
+# Test
+coverage
+*.log
 # Dependencies
 node_modules/
 npm-debug.log*
