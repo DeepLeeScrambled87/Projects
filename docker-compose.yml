@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: api-os-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: api_os_dev
+      POSTGRES_USER: api_os
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U api_os -d api_os_dev"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  postgres-admin:
+    image: dpage/pgadmin4:latest
+    container_name: api-os-pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@api-os.local
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "8080:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    depends_on:
+      - postgres
+    profiles:
+      - admin
+
+volumes:
+  postgres_data:
+  pgadmin_data:

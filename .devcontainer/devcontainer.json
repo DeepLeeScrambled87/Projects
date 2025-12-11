@@ -1,0 +1,37 @@
+{
+  "name": "API OS Development",
+  "image": "mcr.microsoft.com/devcontainers/typescript-node:18",
+  "postCreateCommand": "npm install",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "bradlc.vscode-tailwindcss",
+        "esbenp.prettier-vscode",
+        "dbaeumer.vscode-eslint",
+        "ms-vscode.vscode-typescript-next",
+        "ms-vscode.vscode-json"
+      ]
+    }
+  },
+  "mounts": [
+    "source=${localWorkspaceFolder},target=/workspaces/api-os,type=bind,consistency=cached"
+  ],
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspaces/api-os,type=bind,consistency=cached",
+  "workspaceFolder": "/workspaces/api-os",
+  "forwardPorts": [3000, 5432, 8080],
+  "portsAttributes": {
+    "3000": {
+      "label": "Next.js Development",
+      "onAutoForward": "openPreview"
+    },
+    "5432": {
+      "label": "PostgreSQL",
+      "onAutoForward": "ignore"
+    },
+    "8080": {
+      "label": "pgAdmin",
+      "onAutoForward": "openBrowser"
+    }
+  },
+  "postStartCommand": "docker-compose up -d"
+}
