@@ -125,11 +125,53 @@ ts-node scripts/ingest-public-apis.ts
 ts-node scripts/ingest-public-apis.ts --debug
 ```
 
-### Output
-The script provides comprehensive logging:
-- Progress updates (every 50 APIs)
-- Summary statistics (categories, auth methods, success/error counts)
-- Final ingestion report with counts and lists
+- `GET /api/health` - Health check endpoint
+- `POST /api/health` - Health check with POST data
+- `GET /api/apis` - Search APIs with pagination, text search, and filters
+- `GET /api/meta` - Retrieve available filter facets and aggregated metrics
+
+### `GET /api/apis`
+
+Query parameters:
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| `search` | string | Case-insensitive text match against API name and description |
+| `page` | number (default `1`) | 1-indexed page number |
+| `pageSize` | number (default `20`, max `50`) | Number of records per page |
+| `category` | string[] | Repeatable or comma-separated list of category names |
+| `auth` | string[] | Repeatable or comma-separated list of auth method names |
+| `https` | boolean | `true`/`false` filter for HTTPS support |
+| `cors` | enum (`yes`, `no`, `unknown`) | CORS support flag |
+| `latencyMin` / `latencyMax` | number | Reliability latency range in ms |
+| `uptimeMin` / `uptimeMax` | number | Reliability uptime range (0-100%) |
+
+Responses include the requested page of APIs plus:
+
+```json
+{
+  "data": [
+    {
+      "id": 1,
+      "name": "Cat Facts",
+      "link": "https://catfact.ninja",
+      "https": true,
+      "cors": "yes",
+      "categories": [{ "id": 1, "name": "Animals" }],
+      "authMethods": [{ "id": 3, "name": "No-Auth" }],
+      "throttling": { "limit": "100 requests", "window": "day" },
+      "reliabilityStats": { "latency": 120, "uptime": 99.9, "lastChecked": "2024-01-01T00:00:00.000Z" }
+    }
+  ],
+  "meta": { "page": 1, "pageSize": 20, "total": 4, "hasNextPage": false }
+}
+```
+
+Invalid query parameter combinations return HTTP 400 with structured validation errors.
+
+### `GET /api/meta`
+
+Returns the available filter options (categories, auth methods, HTTPS/CORS counts) and aggregate health metrics such as total APIs, average latency, average uptime, and the timestamp of the most recent dataset change.
 
 See [INGESTION.md](./INGESTION.md) for detailed documentation.
 
