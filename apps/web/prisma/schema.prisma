@@ -1,0 +1,61 @@
+datasource db {
+  provider = "postgresql"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Api {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?
+  link        String
+  https       Boolean  @default(false)
+  cors        String?  // "yes", "no", "unknown"
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  lastFetched DateTime @default(now())
+
+  categories  Category[]
+  authMethods Auth[]
+
+  throttling       Throttling?
+  reliabilityStats ReliabilityStats?
+}
+
+model Category {
+  id   Int    @id @default(autoincrement())
+  name String @unique
+  apis Api[]
+}
+
+model Auth {
+  id   Int    @id @default(autoincrement())
+  name String @unique
+  apis Api[]
+}
+
+model Throttling {
+  id     Int    @id @default(autoincrement())
+  api    Api    @relation(fields: [apiId], references: [id])
+  apiId  Int    @unique
+  limit  String?
+  window String?
+}
+
+model ReliabilityStats {
+  id          Int       @id @default(autoincrement())
+  api         Api       @relation(fields: [apiId], references: [id])
+  apiId       Int       @unique
+  uptime      Float?
+  latency     Float?
+  lastChecked DateTime?
+}
+
+model StackTemplate {
+  id          Int    @id @default(autoincrement())
+  name        String @unique
+  description String?
+  template    Json
+}
