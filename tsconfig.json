@@ -14,11 +14,8 @@
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "noEmit": true,
-    "baseUrl": ".",
-    "paths": {
-      "@api-os/*": ["apps/*/src", "packages/*/src"]
-    }
+    "noEmit": true
   },
-  "exclude": ["node_modules", "dist", "build"]
+  "include": ["scripts/**/*", "tests/**/*", "prisma/**/*"],
+  "exclude": ["node_modules"]
 }

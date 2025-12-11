@@ -22,11 +22,6 @@ model Api {
 
   throttling       Throttling?
   reliabilityStats ReliabilityStats?
-
-  @@index([name])
-  @@index([updatedAt])
-  @@index([https])
-  @@index([cors])
 }
 
 model Category {
@@ -56,9 +51,6 @@ model ReliabilityStats {
   uptime      Float?
   latency     Float?
   lastChecked DateTime?
-
-  @@index([latency])
-  @@index([uptime])
 }
 
 model StackTemplate {
